@@ -1,0 +1,25 @@
+post http://localhost:5000/signup
+
+{
+    "email": "test@gmail.com"
+}
+
+
+/create-setup-intent
+
+###
+post http://localhost:5000/payment/create-setup-intent
+
+{
+    "email": "test@gmail.com"
+}
+
+###
+
+post http://localhost:5000/payment/paymentUpdate
+
+{
+    "email": "test@gmail.com",
+    "paymentMethodId": "pm_1GXz7xlZxY5Fcq9Z2p5QZQw",
+
+}
