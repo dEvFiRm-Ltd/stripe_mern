@@ -44,24 +44,20 @@ const SetupForm = () => {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
-    }
-  };
-
-  const updateUser = async () => {
-    const updateData = axios.post(
-      'http://localhost:5000/payment/paymentUpdate',
-      {
-        email: 'alem@gmail.com',
-        paymentMethodId: 'pm_1L9lHVD6jjMbKOtsfopquKyz',
-        // paymentMethodId: paymentId,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
+      const updateData = await axios.post(
+        'http://localhost:5000/payment/paymentUpdate',
+        {
+          email: 'alem@gmail.com',
+          paymentMethodId: setupIntent?.payment_method,
         },
-      }
-    );
-    console.log('default payment details', updateData);
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('default payment details', updateData);
+    }
   };
 
   return (
@@ -73,7 +69,6 @@ const SetupForm = () => {
         {/* Show error message to your customers */}
         {errorMessage && <div>{errorMessage}</div>}
       </form>
-      <button onClick={updateUser}>Update Details</button>
     </>
   );
 };

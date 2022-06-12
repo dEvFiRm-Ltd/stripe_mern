@@ -29,24 +29,17 @@ exports.paymentMethodUpdate = async (req, res) => {
     //default payment method
     const customer = await stripe.customers.update(user.stripeId, {
       invoice_settings: { default_payment_method: paymentMethodId },
-      default_source: paymentMethodId,
     });
     console.log(customer);
-    // const subscription = await stripe.subscriptions.create({
-    //   customer: user.stripeId,
-    //   default_payment_method: paymentMethodId,
-    //   default_source: paymentMethodId,
-    //   items: [
-    //     {
-    //       price: 'price_1L5NrSD6jjMbKOtsp8Vnb04L',
-    //     },
-    //   ],
-    //   add_invoice_items: [
-    //     {
-    //       price: 'price_1L5NrSD6jjMbKOtsp8Vnb04L',
-    //     },
-    //   ],
-    // });
+    const subscription = await stripe.subscriptions.create({
+      customer: user.stripeId,
+      default_payment_method: paymentMethodId,
+      items: [
+        {
+          price: 'price_1L9pUmD6jjMbKOtsdP7XGftd',
+        },
+      ],
+    });
     res.status(200).json({
       msg: 'subscription created',
       customer,
