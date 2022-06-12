@@ -39,7 +39,7 @@ app.post("/payment-intent", async(req,res)=>{
 
 
   app.get('/',(req,res)=>{
-    res.send('hello world');
+    res.send('<center><h1>Stripe</h1></center>');
   })
 
 

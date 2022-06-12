@@ -1,11 +1,11 @@
-post http://localhost:5000/signup
+post http://localhost:5000/signup 
 
+Content-Type: application/json
 {
-    "email": "test@gmail.com"
+    "email": "test1@gmail.com"
 }
 
 
-/create-setup-intent
 
 ###
 post http://localhost:5000/payment/create-setup-intent

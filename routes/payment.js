@@ -1,9 +1,10 @@
 const router = require('express').Router();
 
-const {createSetUpIntent,paymentMethodUpdate} = require('../controller/paymentController');
+const {createSetUpIntent,paymentMethodUpdate,customerPaymentStatus} = require('../controller/paymentController');
 
 router.post('/create-setup-intent', createSetUpIntent);
 router.post('/paymentUpdate', paymentMethodUpdate);
+router.get('/customer-payment-status', customerPaymentStatus);
 
 
-module.express = router;
+module.exports = router;

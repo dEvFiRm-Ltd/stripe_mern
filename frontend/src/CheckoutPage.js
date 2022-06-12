@@ -1,46 +1,81 @@
+import React, { useState } from 'react';
 import {
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
-} from "@stripe/react-stripe-js";
-import axios from "axios";
-import { useStripe, useElements } from "@stripe/react-stripe-js";
-import React from 'react'
+  useStripe,
+  useElements,
+  PaymentElement,
+} from '@stripe/react-stripe-js';
+import axios from 'axios';
 
-const CheckoutPage = () => {
-    const [amount,setAmount]=React.useState(0);
+const SetupForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const handlePayment = async (event) => {
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [paymentId, setPaymentId] = useState('');
+
+  const handleSubmit = async (event) => {
+    // We don't want to let default form submission happen here,
+    // which would refresh the page.
     event.preventDefault();
-    const response = await axios.post(`http://localhost:5000/payment-intent`, {
-      amount:amount,
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    // Save Payment Details to the user's account
+
+    const { error, setupIntent } = await stripe.confirmSetup({
+      //`Elements` instance that was used to create the Payment Element
+      elements,
+      redirect: 'if_required',
     });
-    if (response.status === 200) {
-      console.log(response.data);
-      const confirmPayment = await stripe.confirmCardPayment(
-        response.data,
-        {
-          payment_method: {
-            card: elements.getElement(CardNumberElement),
-          },
-        }
-      );
-      if (confirmPayment.paymentIntent.status === "succeeded") {
-        console.log("payment confirmed");
-      }
+    console.log('Payment ID!', setupIntent?.payment_method);
+    setPaymentId(setupIntent?.payment_method);
+    // Update user's Default Payment Method
+
+    if (error) {
+      // This point will only be reached if there is an immediate error when
+      // confirming the payment. Show error to your customer (for example, payment
+      // details incomplete)
+      setErrorMessage(error.message);
+    } else {
+      // Your customer will be redirected to your `return_url`. For some payment
+      // methods like iDEAL, your customer will be redirected to an intermediate
+      // site first to authorize the payment, then redirected to the `return_url`.
     }
   };
 
+  const updateUser = async () => {
+    const updateData = axios.post(
+      'http://localhost:5000/payment/paymentUpdate',
+      {
+        email: 'alem@gmail.com',
+        paymentMethodId: 'pm_1L9lHVD6jjMbKOtsfopquKyz',
+        // paymentMethodId: paymentId,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log('default payment details', updateData);
+  };
+
   return (
-    <form onSubmit={handlePayment}>
-      <CardNumberElement />
-      <CardExpiryElement />
-      <CardCvcElement />
-      <input type="text" value={amount} onChange={(e)=>setAmount(e.target.value)}/>
-      <button>Confirm Payment</button>
-    </form>
+    <>
+      {' '}
+      <form onSubmit={handleSubmit}>
+        <PaymentElement />
+        <button disabled={!stripe}>Save Payment Details</button>
+        {/* Show error message to your customers */}
+        {errorMessage && <div>{errorMessage}</div>}
+      </form>
+      <button onClick={updateUser}>Update Details</button>
+    </>
   );
 };
 
-export default CheckoutPage;
+export default SetupForm;

@@ -1,7 +1,8 @@
 const {Schema,model} = require('mongoose');
 
 const userSchema = new Schema({
-    email: String,
+    
+    email:String,
     stripeId: String,
     paid: {
         type: Boolean,
