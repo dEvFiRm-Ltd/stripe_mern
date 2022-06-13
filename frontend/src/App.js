@@ -38,13 +38,19 @@ const App = () => {
     appearance,
   };
   return (
-    <>
-      <center>
-        <Elements stripe={stripePromise} options={options}>
-          <CheckoutPage />
-        </Elements>
-      </center>
-    </>
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Elements stripe={stripePromise} options={options}>
+        <CheckoutPage />
+      </Elements>
+    </div>
   );
 };
 

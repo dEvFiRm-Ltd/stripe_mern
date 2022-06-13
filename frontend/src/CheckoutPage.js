@@ -11,7 +11,6 @@ const SetupForm = () => {
   const elements = useElements();
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [paymentId, setPaymentId] = useState('');
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -32,7 +31,6 @@ const SetupForm = () => {
       redirect: 'if_required',
     });
     console.log('Payment ID!', setupIntent?.payment_method);
-    setPaymentId(setupIntent?.payment_method);
     // Update user's Default Payment Method
 
     if (error) {
@@ -65,7 +63,20 @@ const SetupForm = () => {
       {' '}
       <form onSubmit={handleSubmit}>
         <PaymentElement />
-        <button disabled={!stripe}>Save Payment Details</button>
+        <button
+          disabled={!stripe}
+          style={{
+            padding: '12px 16px',
+            borderRadius: '12px',
+            margin: '15px 0',
+            border: '1px solid #80E9FF',
+            backgroundColor: '#7A73FF',
+            color: '#fff',
+            fontWeight: '600',
+          }}
+        >
+          Save Payment Details
+        </button>
         {/* Show error message to your customers */}
         {errorMessage && <div>{errorMessage}</div>}
       </form>
